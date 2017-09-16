@@ -956,6 +956,10 @@ func (nrc *NetworkRoutingController) startBgpServer() error {
 					PeerAs:          peerAsnNo,
 				},
 			}
+			nodeBGPPasswordAnnotation, ok := node.ObjectMeta.Annotations["net.kuberouter.node.bgppeer.password"]
+			if ok {
+				n.Config.AuthPassword = nodeBGPPasswordAnnotation
+			}
 			if err := nrc.bgpServer.AddNeighbor(n); err != nil {
 				return errors.New("Failed to peer with node specific BGP peer router: " +
 					peer + " due to " + err.Error())
